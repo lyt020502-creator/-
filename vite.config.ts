@@ -5,8 +5,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-      // 添加GitHub Pages支持的base配置
-      base: '/prompt/',
+      // 根路径配置，适用于Vercel部署
+      base: '/',
       server: {
         port: 3000,
         host: '0.0.0.0',
