@@ -1,0 +1,29 @@
+{
+  "name": "风格提示词管理器",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "node deploy.js",
+    "deploy-gh-pages": "node deploy_gh_pages.js"
+  },
+  "dependencies": {
+    "@google/genai": "^1.30.0",
+    "lucide-react": "^0.554.0",
+    "lz-string": "^1.5.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "chalk": "^5.6.2",
+    "gh-pages": "^6.3.0",
+    "ora": "^8.0.1",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "test1",
+    "name": "测试模板1",
+    "tags": ["测试", "导入"],
+    "coverImageUrl": "https://picsum.photos/seed/test1/800/600",
+    "promptText": "这是测试模板1的内容",
+    "createdAt": 1764058000000,
+    "updatedAt": 1764058000000
+  },
+  {
+    "id": "test2",
+    "name": "缺少字段的模板",
+    "promptText": "这个模板缺少一些字段，但应该能被导入并补充默认值"
+  },
+  {
+    "notValid": true
+  }
+]

@@ -1,0 +1,58 @@
+name: Store User Data via Form
+
+on:
+  repository_dispatch:
+    types: [store_user_data]
+
+jobs:
+  store-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Create data directory if not exists
+        run: mkdir -p data
+
+      - name: Generate data file
+        id: generate_file
+        run: |
+          # 使用当前时间戳生成唯一文件名
+          TIMESTAMP=$(date +%s)
+          FILENAME="data/user_data_${TIMESTAMP}.json"
+          
+          # 从仓库调度事件中提取数据
+          echo '${{ github.event.client_payload.data }}' > $FILENAME
+          
+          # 确保文件内容是有效的JSON
+          npx jsonlint $FILENAME || exit 1
+          
+          # 设置输出变量
+          echo "filename=$FILENAME" >> $GITHUB_OUTPUT
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+
+      - name: Commit and push changes
+        run: |
+          git add ${{ steps.generate_file.outputs.filename }}
+          git commit -m "Add user data file: ${{ steps.generate_file.outputs.filename }}"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Return success response
+        run: |
+          echo "Data stored successfully in ${{ steps.generate_file.outputs.filename }}"
+          # 返回文件ID，用于后续检索
+          echo "::set-output name=file_id::user_data_${TIMESTAMP}"

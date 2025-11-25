@@ -1,0 +1,5 @@
+{
+  "name": "风格提示词管理器",
+  "description": "一个可视化的 UI 风格提示词管理工具。上传参考图片即可通过 Gemini 自动生成结构化的提示词，并将其整理成可直接复制粘贴的库。",
+  "requestFramePermissions": []
+}
