@@ -1,6 +1,159 @@
 # 风格提示词管理器 - 部署指南
 
-本指南详细说明了如何将风格提示词管理器应用部署到可公开访问的服务器环境。
+## Vercel部署指南
+
+### 步骤1：准备项目
+
+确保您的项目包含以下必要配置：
+
+#### vercel.json 配置说明
+
+项目中的 `vercel.json` 文件包含以下关键配置：
+
+```json
+{
+  "version": 2,                 // Vercel配置版本
+  "builds": [                   // 构建配置
+    {
+      "src": "package.json",    // 触发构建的源文件
+      "use": "@vercel/static-build",  // 使用静态站点构建器
+      "config": {
+        "distDir": "dist"       // 指定输出目录
+      }
+    }
+  ],
+  "routes": [                   // 路由配置
+    {
+      "handle": "filesystem"     // 先检查文件系统
+    },
+    {
+      "src": "/(.*)",           // 匹配所有路径
+      "dest": "/index.html"     // 重定向到index.html（支持SPA）
+    }
+  ],
+  "buildCommand": "npm run build",  // 构建命令
+  "outputDirectory": "dist",        // 输出目录
+  "cleanUrls": true,                 // 启用干净的URL（移除.html后缀）
+  "trailingSlash": false             // 禁用尾部斜杠
+}
+```
+
+#### package.json 构建脚本
+
+`package.json` 中的构建脚本已正确配置为：
+
+```json
+"scripts": {
+  "build": "vite build"  // 使用Vite进行构建
+}
+```
+
+#### vite.config.ts 基础路径配置
+
+由于Vercel部署的URL包含 `/prompt/` 前缀，需要在 `vite.config.ts` 中设置正确的base路径：
+
+```typescript
+// vite.config.ts
+export default defineConfig({
+  base: '/prompt/', // 必须设置为/prompt/以匹配Vercel部署的URL结构
+  // 其他配置...
+})
+```
+
+这些配置确保了Vercel能够正确构建和部署您的React+Vite应用。
+
+### 步骤2：确保代码已推送到GitHub
+
+项目已经配置了Git并连接到GitHub仓库。如果您是首次设置：
+
+```bash
+# 初始化Git仓库
+git init
+
+# 添加所有文件
+git add .
+
+# 提交更改
+git commit -m "初始提交"
+
+# 关联GitHub仓库
+git remote add origin https://github.com/您的用户名/项目名称.git
+
+# 推送到GitHub
+git push -u origin master
+```
+
+### 步骤3：在Vercel控制台创建新项目
+
+1. 访问 [Vercel官网](https://vercel.com)
+2. 点击右上角的 `Log in` 登录您的账户（如果没有账户，请先注册）
+3. 登录后，点击顶部导航栏的 `New Project` 按钮
+4. 在项目创建页面，您会看到您的GitHub仓库列表
+5. 找到您的项目仓库，点击右侧的 `Import` 按钮
+
+### 步骤4：配置项目设置
+
+在导入仓库后，您需要配置项目设置：
+
+1. **项目名称**：可以使用默认名称或自定义
+2. **团队**：选择适合的团队（如果适用）
+3. **根目录**：保持默认值（如果项目在仓库根目录）
+4. **Framework Preset**：选择 `Vite`
+5. **Build Command**：应该会自动检测为 `npm run build`（保持不变）
+6. **Output Directory**：应该会自动检测为 `dist`（保持不变）
+7. **Environment Variables**：如果项目需要环境变量，在这里添加
+8. 点击 `Deploy` 按钮开始部署
+
+### 步骤5：触发部署并验证结果
+
+#### 触发部署
+
+1. 配置完成后，点击 `Deploy` 按钮开始部署过程
+2. Vercel会自动克隆您的GitHub仓库并开始构建
+3. 部署过程中可以实时查看构建日志
+
+#### 验证部署结果
+
+1. 部署完成后，Vercel会显示部署状态为 `Production Ready`
+2. 系统会提供一个自动生成的域名（格式通常为 `您的项目名称.vercel.app`）
+3. 点击提供的URL访问您的网站
+4. 验证网站的所有功能是否正常工作
+
+#### 常见问题排查
+
+如果部署失败或网站无法正常工作，请检查以下几点：
+
+1. **构建日志错误**：
+   - 查看Vercel控制台中的构建日志
+   - 注意任何错误信息，特别是依赖安装或构建过程中的错误
+
+2. **路径问题**：
+   - 确保所有资源引用路径正确
+   - 对于SPA应用，确保路由配置正确（`routes`部分）
+
+3. **环境变量**：
+   - 如果项目需要环境变量，确保已在Vercel控制台中正确配置
+   - 环境变量更改后需要重新部署
+
+4. **构建配置**：
+   - 确认 `buildCommand` 和 `outputDirectory` 与您的项目配置一致
+   - 检查 `vercel.json` 中的配置是否正确
+
+5. **依赖问题**：
+   - 确保所有依赖都在 `package.json` 中正确声明
+   - 可以尝试在本地运行 `npm install` 和 `npm run build` 测试构建
+
+#### 重新部署
+
+如需重新部署项目：
+
+1. 对GitHub仓库进行任何修改并推送到远程
+2. Vercel会自动检测变更并触发新的部署
+3. 或者在Vercel控制台中点击项目的 `Deploy` 按钮手动触发部署
+
+## 传统服务器部署指南
+
+本指南详细说明了如何将风格提示词管理器应用部署到可公开访问的传统服务器环境。
 
 ## 1. 服务器环境准备
 
