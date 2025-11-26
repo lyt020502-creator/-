@@ -28,16 +28,11 @@ export default defineConfig(({ mode }) => {
       },
       // CSS处理配置
       css: {
-        // 禁用自动注入CSS，避免引用不存在的文件
+        // 配置CSS模块命名规则
         modules: {
           generateScopedName: '[name]__[local]__[hash:base64:5]'
-        },
-        // 配置CSS预处理器（如果需要）
-        preprocessorOptions: {
-          css: {
-            // 可以在这里添加全局CSS变量等
-          }
         }
+        // 注意：preprocessorOptions只支持scss、sass、less、stylus等预处理器，不支持直接配置css
       },
       // 构建配置
       build: {
