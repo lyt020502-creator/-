@@ -6,7 +6,8 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
       // 根路径配置，适用于Vercel部署
-      base: '/',
+      // 注意：URL中包含/prompt/前缀，所以base需要设置为/prompt/
+      base: '/prompt/',
       server: {
         port: 3000,
         host: '0.0.0.0',
